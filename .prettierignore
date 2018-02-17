@@ -1,0 +1,4 @@
+# https://prettier.io/docs/en/ignore.html
+
+/chrome
+/node_modules

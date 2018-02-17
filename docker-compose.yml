@@ -1,0 +1,28 @@
+# Heroku does not use this configuration. This is for local development only.
+
+version: '3'
+services:
+    web:
+        # Allow colorized output
+        tty: true
+        build: .
+        ports:
+            - '${PORT}:${PORT}'
+            # Node inspector
+            - '9229:9229'
+        # Pass shell env vars through to container
+        environment:
+            - NODE_ENV=development
+            - REDIS_URL=redis://redis:6379
+            - PORT
+            - TWITTER_CONSUMER_KEY
+            - TWITTER_CONSUMER_SECRET
+            - EXPRESS_SESSION_SECRET
+        links:
+            - redis
+        # Prod run command is in Procfile
+        command: npm run --silent start:dev
+        volumes:
+            - .:/app
+    redis:
+        image: 'redis'

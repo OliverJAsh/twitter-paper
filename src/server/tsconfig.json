@@ -1,0 +1,34 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es2015",
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "strict": true,
+        "noImplicitReturns": true,
+        "sourceMap": true,
+        // This guarantees the output directory structure will always remain the same regardless of
+        // what gets compiled. (By default, TypeScript will use the closest ancestor directory of
+        // all imports, which can of course change with changes to the dependency graph.)
+        "rootDir": "./",
+
+        // AsyncIterable support
+        "lib": [
+            "es2015",
+            "esnext.asynciterable",
+            "es2016.array.include",
+            // Required only for node_modules/ix/types/asynciterable/fromevent.d.ts, which uses
+            // `EventTarget`.
+            "dom"
+        ],
+        "outDir": "../../target-tsc/server",
+        "plugins": [{ "name": "tslint-language-service" }]
+    },
+    "files": [
+        "./index.ts",
+        "./tests/index.test.ts",
+        "./tests/publication.test.ts",
+        "./tests/helpers/twitter-date.test.ts",
+        "./typings/augmentations/ix.d.ts"
+    ]
+}

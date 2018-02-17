@@ -1,0 +1,14 @@
+# https://docs.docker.com/engine/reference/builder/#dockerignore-file
+
+# Start .gitignore copy
+node_modules/
+src/server/node_modules/
+target-tsc/
+npm-debug.log
+chrome/
+.env
+# End .gitignore copy
+
+.vscode/
+.git/
+.gitignore

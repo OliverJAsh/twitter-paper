@@ -1,0 +1,43 @@
+{
+  "private": true,
+  "scripts": {
+    "tsc:server": "tsc --project ./src/server/",
+    "tsc:server:watch": "npm run tsc:server -- --watch",
+    "pretsc": "rm -rf ./target-tsc/ && mkdir -p ./target-tsc/",
+    "tsc": "npm run tsc:server",
+    "ts-unused-exports:server":
+      "ts-unused-exports './src/server/tsconfig.json'",
+    "compile": "npm run tsc",
+    "server:dev":
+      "node --harmony-async-iteration --inspect=0.0.0.0:9229 ./server-entry.js",
+    "server": "node --harmony-async-iteration ./server-entry.js",
+    "start:dev":
+      "nodemon --exec 'concurrently --kill-others-on-fail \"npm run compile\" \"npm run lint\" && npm run server:dev' --watch ./src/server --ext ts",
+    "start":
+      "concurrently --kill-others-on-fail 'npm run compile' 'npm run lint' && npm run server",
+    "test:server":
+      " npm run tsc:server && npm run lint:server && node --harmony-async-iteration ./server-entry-tests.js",
+    "test": "npm run test:server",
+    "tslint:server": "tslint --project './src/server'",
+    "lint:server": "npm run tslint:server && npm run ts-unused-exports:server",
+    "lint": "npm run lint:server",
+    "format": "prettier --write './src/**/*.{ts,js}' './**/*.json'"
+  },
+  "dependencies": {
+    "concurrently": "^3.5.0",
+    "ts-unused-exports": "^2.0.3",
+    "tslint": "^5.5.0",
+    "tslint-immutable": "^4.4.0",
+    "typescript": "^2.7.2"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0",
+    "prettier": "^1.5.2",
+    "tslint-language-service": "^0.9.6"
+  },
+  "workspaces": ["src/server"],
+  "engines": {
+    "node": "8.9.4",
+    "yarn": "1.3.2"
+  }
+}

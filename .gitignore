@@ -1,0 +1,6 @@
+/node_modules/
+/src/server/node_modules/
+/target-tsc/
+/npm-debug.log
+/chrome/
+/.env
