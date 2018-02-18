@@ -70,7 +70,7 @@ export const renderErrorResponse = ErrorResponse.match({
 
 export const renderPublication = (publication: PublicationResponse): string =>
     [
-        ...publication.warning.map(message => [`Warning: ${message}`]).getOrElse([]),
+        ...publication.warning.map(message => [`Warning: ${message.tag}`]).getOrElse([]),
         `<ol>${publication.tweets
             .map(
                 tweet =>
