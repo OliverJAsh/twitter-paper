@@ -69,11 +69,12 @@ export const renderErrorResponse = ErrorResponse.match({
     Unauthenticated: () => 'Not authenticated',
 });
 
+const TIMELINE_MAX = 800;
 const getWarningMessage = PublicationWarning.match({
     RangeStartPotentiallyUnreachable: () =>
-        `No publication tweets were found. We were unable to find any tweets >= the publication end time. Note we can only access the last 800 tweets.`,
+        `No publication tweets were found. We were unable to find any tweets >= the publication end time. Note we can only access up to the last ${TIMELINE_MAX} tweets.`,
     RangeEndPotentiallyUnreachable: () =>
-        `This publication is potentially incomplete. We were unable to find any tweets > the publication start time. Note we can only access the last 800 tweets.`,
+        `This publication is potentially incomplete. We were unable to find any tweets > the publication start time. Note we can only access up to the last ${TIMELINE_MAX} tweets.`,
 });
 
 export const renderPublication = (publication: PublicationResponse): string =>
