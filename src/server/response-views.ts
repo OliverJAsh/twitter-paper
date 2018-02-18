@@ -3,6 +3,7 @@ import * as array from 'fp-ts/lib/Array';
 import { formatValidationError } from 'io-ts-reporters';
 import { ErrorResponse as TwitterApiErrorResponse } from 'twitter-api-ts/target/types';
 
+import { PublicationWarning } from './publication';
 import { PublicationResponse } from './types';
 import { ErrorResponse } from './types/error-response';
 
@@ -68,9 +69,19 @@ export const renderErrorResponse = ErrorResponse.match({
     Unauthenticated: () => 'Not authenticated',
 });
 
+const getWarningMessage = PublicationWarning.match({
+    RangeStartPotentiallyUnreachable: () =>
+        `No publication tweets were found. We were unable to find any tweets >= the publication end time. Note we can only access the last 800 tweets.`,
+    RangeEndPotentiallyUnreachable: () =>
+        `This publication is potentially incomplete. We were unable to find any tweets > the publication start time. Note we can only access the last 800 tweets.`,
+});
+
 export const renderPublication = (publication: PublicationResponse): string =>
     [
-        ...publication.warning.map(message => [`Warning: ${message.tag}`]).getOrElse([]),
+        ...publication.warning
+            .map(getWarningMessage)
+            .map(message => [`Warning: ${message}`])
+            .getOrElse([]),
         `<ol>${publication.tweets
             .map(
                 tweet =>
