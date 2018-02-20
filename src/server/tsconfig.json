@@ -28,7 +28,6 @@
         "./index.ts",
         "./tests/index.test.ts",
         "./tests/publication.test.ts",
-        "./tests/helpers/twitter-date.test.ts",
-        "./typings/augmentations/ix.d.ts"
+        "./tests/helpers/twitter-date.test.ts"
     ]
 }

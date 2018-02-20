@@ -1406,9 +1406,9 @@ isstream@~0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/isstream/-/isstream-0.1.2.tgz#47e63f7af55afa6f92e1500e690eb8b8529c099a"
 
-ix@^2.1.0:
-  version "2.3.4"
-  resolved "https://registry.yarnpkg.com/ix/-/ix-2.3.4.tgz#36cf30dd93ef5a3b3c64434ad7cacc05a7852386"
+ix@^2.3.5:
+  version "2.3.5"
+  resolved "https://registry.yarnpkg.com/ix/-/ix-2.3.5.tgz#8f1f221d420e248833009601ca49d4fae3d794c9"
   dependencies:
     tslib "^1.8.0"
 
