@@ -3,6 +3,7 @@
   "scripts": {
     "tsc:server": "tsc --project ./src/server/",
     "tsc:server:watch": "npm run tsc:server -- --watch",
+    "typecheck:server:watch": "npm run tsc:server:watch -- --noEmit",
     "pretsc": "rm -rf ./target-tsc/ && mkdir -p ./target-tsc/",
     "tsc": "npm run tsc:server",
     "ts-unused-exports:server":
