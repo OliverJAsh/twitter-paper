@@ -24,7 +24,6 @@ import {
     isTwitterApiErrorResponseRateLimitExceeded,
     MAX_TIMELINE_COUNT,
 } from './helpers/twitter-api';
-import { twitterTimeZoneToIanaTimeZoneMap } from './helpers/twitter-time-zone-map';
 import { renderErrorResponse } from './response-views';
 import { OrErrorResponse, OrErrorResponseAsync, UserTwitterCredentialsT } from './types';
 import * as ErrorResponses from './types/error-response';
@@ -124,36 +123,19 @@ export const getTwitterUserCredentialsFromReq = (
         ),
     );
 
-const getIanaTimeZoneFromTwitterTimeZone = (twitterTimeZone: string): Option<string> =>
-    option.fromNullable(twitterTimeZoneToIanaTimeZoneMap[twitterTimeZone]);
-
 export const getUserTimeZone = (
-    user: TwitterApiTypes.TwitterAPIAccountVerifyCredentialsT,
+    user: TwitterApiTypes.TwitterAPIAccountSettingsT,
 ): OrErrorResponse<string> =>
-    option
-        .fromNullable(user.time_zone)
-        .foldL(
-            (): OrErrorResponse<string> =>
-                either.left(
-                    ErrorResponse.Simple({
-                        statusCode: INTERNAL_SERVER_ERROR,
-                        message: 'Time zone not available for Twitter user',
-                    }),
-                ),
-            timeZone => either.right(timeZone),
-        )
-        .chain((twitterTimeZone): OrErrorResponse<string> =>
-            getIanaTimeZoneFromTwitterTimeZone(twitterTimeZone).foldL(
-                () =>
-                    either.left(
-                        ErrorResponse.Simple({
-                            statusCode: INTERNAL_SERVER_ERROR,
-                            message: 'Unsupported time zone specified',
-                        }),
-                    ),
-                timeZone => either.right(timeZone),
+    option.fromNullable(user.time_zone.tzinfo_name).foldL(
+        (): OrErrorResponse<string> =>
+            either.left(
+                ErrorResponse.Simple({
+                    statusCode: INTERNAL_SERVER_ERROR,
+                    message: 'Time zone not available for Twitter user',
+                }),
             ),
-        );
+        timeZone => either.right(timeZone),
+    );
 
 enum AuthCallbackQueryParameter {
     OAuthToken = 'oauth_token',
@@ -200,8 +182,8 @@ export const getAccessToken = (query: AuthCallbackQueryT) =>
         },
     });
 
-export const fetchAccountVerifyCredentials = (credentials: UserTwitterCredentialsT) =>
-    TwitterApi.fetchAccountVerifyCredentials({
+export const fetchAccountSettings = (credentials: UserTwitterCredentialsT) =>
+    TwitterApi.fetchAccountSettings({
         oAuth: {
             consumerKey: TWITTER_CONSUMER_KEY,
             consumerSecret: TWITTER_CONSUMER_SECRET,

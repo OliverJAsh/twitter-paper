@@ -51,7 +51,7 @@ export const createTimelineSuccess = (
 
 const tweetDefaults: Pick<TwitterApiTypes.TweetT, 'text' | 'user' | 'created_at'> = {
     text: 'foo',
-    user: { id_str: 'foo', screen_name: 'foo', time_zone: 'foo' },
+    user: { id_str: 'foo', screen_name: 'foo', time_zone: null },
     created_at: formatTwitterDate(luxon.DateTime.utc()),
 };
 type TweetInput = ObjectDiff<TwitterApiTypes.TweetT, typeof tweetDefaults>;

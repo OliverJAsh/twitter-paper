@@ -17,7 +17,7 @@ import { renderPublication } from './response-views';
 import {
     createFetchHomeTimelineFn,
     errorResponseToResult,
-    fetchAccountVerifyCredentials,
+    fetchAccountSettings,
     getAccessToken,
     getAuthCallbackQuery,
     getRequestToken,
@@ -95,9 +95,8 @@ const homeAuthenticated: SafeRequestHandlerAsync = req => {
     const credentialsM = getTwitterUserCredentialsFromReq(req);
 
     const userM = credentialsM.chain(credentials =>
-        new TaskEither(fetchAccountVerifyCredentials(credentials)).mapLeft(
-            twitterApiErrorResponse =>
-                ErrorResponse.TwitterApi({ errorResponse: twitterApiErrorResponse }),
+        new TaskEither(fetchAccountSettings(credentials)).mapLeft(twitterApiErrorResponse =>
+            ErrorResponse.TwitterApi({ errorResponse: twitterApiErrorResponse }),
         ),
     );
 
