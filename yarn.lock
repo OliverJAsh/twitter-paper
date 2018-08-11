@@ -2472,9 +2472,9 @@ tweetnacl@^0.14.3, tweetnacl@~0.14.0:
   version "0.14.5"
   resolved "https://registry.yarnpkg.com/tweetnacl/-/tweetnacl-0.14.5.tgz#5ae68177f192d4456269d108afa93ff8743f4f64"
 
-twitter-api-ts@^0.0.29:
-  version "0.0.29"
-  resolved "https://registry.yarnpkg.com/twitter-api-ts/-/twitter-api-ts-0.0.29.tgz#956d097f7ca042b59f7c4fb022b8516637862d5d"
+twitter-api-ts@^0.0.31:
+  version "0.0.31"
+  resolved "https://registry.yarnpkg.com/twitter-api-ts/-/twitter-api-ts-0.0.31.tgz#16e9e7896da7fb779ef64eca2288069ea6ed37cd"
   dependencies:
     decode-ts "^0.0.10"
     fp-ts "^1.0.1"
