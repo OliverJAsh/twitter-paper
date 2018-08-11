@@ -5,21 +5,23 @@ import { map, mean, pipe } from 'ramda';
 import { createErrorResponse } from 'twitter-api-ts/target/helpers';
 import * as TwitterApiTypes from 'twitter-api-ts/target/types';
 
-type Omit < T , K extends keyof T > = Pick<T, Exclude<keyof T, K>>;
-type ObjectOmit < T extends K , K > = Omit<T, keyof K>;
-
-type ObjectDiff < O1 extends O2 , O2 > = ObjectOmit<O1, O2> & Partial<O2>;
-
 import { formatTwitterDate } from '../helpers/twitter-date';
 
 import Either = either.Either;
 
+type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+type ObjectOmit<T extends K, K> = Omit<T, keyof K>;
+
+type ObjectDiff<O1 extends O2, O2> = ObjectOmit<O1, O2> & Partial<O2>;
+
 const dateToEpoch = (date: luxon.DateTime) => date.valueOf();
-const meanDates = pipe(map(dateToEpoch), mean, luxon.DateTime.fromMillis);
-export const getMeanDateFromInterval = (interval: luxon.Interval): luxon.DateTime => {
-    const { start, end } = interval;
-    return meanDates([start, end]);
-};
+const meanDates = pipe(
+    map(dateToEpoch),
+    mean,
+    luxon.DateTime.fromMillis,
+);
+export const getMeanDateFromInterval = ({ start, end }: luxon.Interval): luxon.DateTime =>
+    meanDates([start, end]);
 
 export const assertEitherRight = <L, A>(
     assert: tape.Test,

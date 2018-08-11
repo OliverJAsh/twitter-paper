@@ -1,5 +1,3 @@
-// tslint:disable no-expression-statement
-
 import * as tape from 'blue-tape';
 import * as array from 'fp-ts/lib/Array';
 import * as chain from 'fp-ts/lib/Chain';
@@ -30,6 +28,11 @@ import {
     createTweet,
     getMeanDateFromInterval,
 } from './helpers';
+
+// tslint:disable no-import-side-effect
+import './helpers/twitter-date.test';
+import './publication.test';
+// tslint:enable no-import-side-effect
 
 const timeZone = 'utc';
 const nowDate = luxon.DateTime.utc(2017, 1, 2);
@@ -116,20 +119,15 @@ tape('`getLatestPublication` given failures, should return first failure', async
     assertEitherLeft(
         assert,
         serverResponse.mapLeft(
-            ErrorResponse.match(
-                {
-                    TwitterApi: ({ errorResponse }) =>
-                        TwitterApiTypes.ErrorResponse.is.APIErrorResponse(errorResponse)
-                            ? errorResponse.apiErrorResponse.errors.map(
-                                  // https://github.com/gcanti/io-ts/tree/1786946db7eea09b951a3efc46cdf668fe3299c0#known-issues
-                                  // https://github.com/Microsoft/TypeScript/issues/14041
-                                  // tslint:disable-next-line no-unsafe-any
-                                  twitterApiError => twitterApiError.code,
-                              )
-                            : [],
-                },
-                () => [],
-            ),
+            ErrorResponse.match({
+                TwitterApi: ({ errorResponse }) =>
+                    TwitterApiTypes.ErrorResponse.is.APIErrorResponse(errorResponse)
+                        ? errorResponse.apiErrorResponse.errors.map(
+                              twitterApiError => twitterApiError.code,
+                          )
+                        : [],
+                default: () => [],
+            }),
         ),
         statusCodes => {
             assert.deepEqual(statusCodes, [1]);
@@ -396,9 +394,6 @@ tape(
                 errorResponse =>
                     TwitterApiTypes.ErrorResponse.is.APIErrorResponse(errorResponse)
                         ? errorResponse.apiErrorResponse.errors.map(
-                              // https://github.com/gcanti/io-ts/tree/1786946db7eea09b951a3efc46cdf668fe3299c0#known-issues
-                              // https://github.com/Microsoft/TypeScript/issues/14041
-                              // tslint:disable-next-line no-unsafe-any
                               twitterApiError => twitterApiError.code,
                           )
                         : [],

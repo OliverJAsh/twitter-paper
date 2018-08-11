@@ -32,12 +32,7 @@ const renderTwitterApiErrorResponse = (
             [
                 'API errors:',
                 '<ul>',
-                ...apiErrorResponse.errors.map(
-                    // https://github.com/gcanti/io-ts/tree/1786946db7eea09b951a3efc46cdf668fe3299c0#known-issues
-                    // https://github.com/Microsoft/TypeScript/issues/14041
-                    // tslint:disable-next-line no-unsafe-any
-                    error => `<li>${error.code}: ${error.message}</li>`,
-                ),
+                ...apiErrorResponse.errors.map(error => `<li>${error.code}: ${error.message}</li>`),
                 '</ul>',
             ].join(''),
         JavaScriptError: ({ error }) => `JavaScript error: ${error.stack}`,
@@ -69,6 +64,7 @@ export const renderErrorResponse = ErrorResponse.match({
     Unauthenticated: () => 'Not authenticated',
 });
 
+// https://developer.twitter.com/en/docs/tweets/timelines/api-reference/get-statuses-home_timeline
 const TIMELINE_MAX = 800;
 const getWarningMessage = PublicationWarning.match({
     RangeStartPotentiallyUnreachable: () =>
@@ -86,9 +82,6 @@ export const renderPublication = (publication: PublicationResponse): string =>
         `<ol>${publication.tweets
             .map(
                 tweet =>
-                    // https://github.com/gcanti/io-ts/tree/1786946db7eea09b951a3efc46cdf668fe3299c0#known-issues
-                    // https://github.com/Microsoft/TypeScript/issues/14041
-                    // tslint:disable-next-line no-unsafe-any
                     `<li>${tweet.id_str} ${tweet.created_at} @${tweet.user.screen_name}: ${
                         tweet.text
                     }</li>`,

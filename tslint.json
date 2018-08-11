@@ -1,22 +1,12 @@
 {
-    "extends": ["tslint-immutable"],
+    "extends": ["tslint-no-unused"],
     "linterOptions": {
         "exclude": ["**/node_modules/**/*"]
     },
     "rules": {
+        "no-unused": true,
         "no-any": true,
-
-        // Conflicts with `no-unused-variable` rule
-        // https://github.com/palantir/tslint/issues/2728#issuecomment-317262259
         "no-unsafe-any": true,
-
-        // - Not currently supported by tslint-language-service
-        //   https://github.com/palantir/tslint/issues/2649
-        // - This rule causes false positive errors when used with no-inferred-empty-object-type,
-        //   no-unsafe-any
-        //   https://github.com/palantir/tslint/issues/2728#issuecomment-317262259
-        // "no-unused-variable": [true, "check-parameters"],
-
         "strict-boolean-expressions": true,
         "ordered-imports": [
             true,
@@ -68,9 +58,6 @@
             // e.g. for io-ts types
             "allow-pascal-case"
         ],
-        "no-expression-statement": {
-            "severity": "warning"
-        },
         "no-import-side-effect": true,
         "no-duplicate-imports": true,
         "no-implicit-dependencies": [true, "dev"],

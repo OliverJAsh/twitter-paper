@@ -14,13 +14,14 @@ services:
         environment:
             - NODE_ENV=development
             - REDIS_URL=redis://redis:6379
+            # These are defined in `.env`.
             - PORT
             - TWITTER_CONSUMER_KEY
             - TWITTER_CONSUMER_SECRET
             - EXPRESS_SESSION_SECRET
         links:
             - redis
-        # Prod run command is in Procfile
+        # Prod run command is in `Dockerfile`.
         command: npm run --silent start:dev
         volumes:
             - .:/app

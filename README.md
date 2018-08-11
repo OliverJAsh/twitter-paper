@@ -4,13 +4,13 @@ Read Twitter like a newspaper. Yesterday's tweets, published each morning.
 
 ## Docker
 
-``` bash
+```bash
 docker-compose up
 ```
 
 ## Creating and configuring new Heroku app
 
-``` bash
+```bash
 heroku apps:create
 heroku container:push web
 heroku config:set \

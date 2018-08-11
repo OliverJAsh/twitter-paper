@@ -11,7 +11,7 @@ export type NodeEnv = typeof NodeEnv._Union;
 const NODE_ENV_PRODUCTION = 'production';
 const NODE_ENV_DEVELOPMENT = 'development';
 
-export const getNodeEnvFromEnvVars = (envVars: NodeJS.ProcessEnv): NodeEnv => {
+const getNodeEnvFromEnvVars = (envVars: NodeJS.ProcessEnv): NodeEnv => {
     switch (envVars[EnvVar.NODE_ENV]) {
         case NODE_ENV_PRODUCTION:
             return NodeEnv.Production({});
@@ -21,3 +21,5 @@ export const getNodeEnvFromEnvVars = (envVars: NodeJS.ProcessEnv): NodeEnv => {
             throw new Error('Invalid');
     }
 };
+
+export const NODE_ENV = getNodeEnvFromEnvVars(process.env);

@@ -9,7 +9,7 @@ const addQueryToParsedUrl = (
     const { protocol, host, hash, pathname } = parsedUrl;
     const existingQuery = parsedUrl.query;
     const newQuery: ParsedUrlQuery = { ...existingQuery, ...queryToAppend };
-    // We omit some formatted values (e.g. `search`) as they take precendence over the parsed
+    // We omit some formatted values (e.g. `search`) as they take precedence over the parsed
     // equivalents (e.g. `query`).
     const newParsedUrl = {
         protocol,

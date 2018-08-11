@@ -6,6 +6,7 @@
     // We use the language service plugin for this
     "tslint.enable": false,
 
+    // These settings should match the glob passed to Prettier's CLI.
     "[typescript]": {
         "editor.formatOnSave": true
     },
@@ -18,10 +19,12 @@
     "[jsonc]": {
         "editor.formatOnSave": true
     },
+    "[markdown]": {
+        "editor.formatOnSave": true
+    },
+    "[yaml]": {
+        "editor.formatOnSave": true
+    },
 
-    // https://github.com/Microsoft/vscode/issues/42243
-    // https://code.visualstudio.com/docs/languages/typescript#_using-newer-typescript-versions
-    // https://github.com/Microsoft/vscode/issues/30069#issuecomment-312732928
-    // https://github.com/Microsoft/vscode/issues/19567
     "typescript.tsdk": "node_modules/typescript/lib"
 }

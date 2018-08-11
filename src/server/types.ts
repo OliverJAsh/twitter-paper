@@ -12,7 +12,7 @@ import Either = either.Either;
 import TaskEither = taskEither.TaskEither;
 
 //
-// Reponses
+// Responses
 //
 
 export type PublicationResponse = {

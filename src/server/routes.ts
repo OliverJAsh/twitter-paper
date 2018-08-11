@@ -1,6 +1,4 @@
 import { SafeRequestHandler, SafeRequestHandlerAsync, wrapAsync } from 'express-fp';
-// Transitive dependency of express-fp
-// tslint:disable-next-line no-implicit-dependencies
 import { Ok, TemporaryRedirect } from 'express-result-types/target/result';
 import * as apply from 'fp-ts/lib/Apply';
 import * as either from 'fp-ts/lib/Either';
@@ -24,7 +22,7 @@ import {
     getTwitterUserCredentialsFromReq,
     getUserTimeZone,
     htmlValueWriteable,
-    Route,
+    RoutePathname,
     SessionKeys,
 } from './routes-helpers';
 import { createTimelineResponsesIterable } from './timeline-responses-iterable';
@@ -38,22 +36,24 @@ export const authIndex = wrapAsync(() =>
         .mapLeft(twitterApiErrorResponse =>
             ErrorResponse.TwitterApi({ errorResponse: twitterApiErrorResponse }),
         )
-        .map((twitterApiRequestTokenResponse): OrErrorResponse<string> => {
-            if (twitterApiRequestTokenResponse.oauth_callback_confirmed === 'true') {
-                const query: TwitterApiTypes.OAuthAuthenticateEndpointQuery = {
-                    oauth_token: twitterApiRequestTokenResponse.oauth_token,
-                };
-                const redirectUrl = addQueryToUrl(query)(twitterApiOAuthAuthenticateUrl);
-                return either.right(redirectUrl);
-            } else {
-                return either.left(
-                    ErrorResponse.Simple({
-                        statusCode: INTERNAL_SERVER_ERROR,
-                        message: `Expected 'oauth_callback_confirmed' to be 'true'`,
-                    }),
-                );
-            }
-        })
+        .map(
+            (twitterApiRequestTokenResponse): OrErrorResponse<string> => {
+                if (twitterApiRequestTokenResponse.oauth_callback_confirmed === 'true') {
+                    const query: TwitterApiTypes.OAuthAuthenticateEndpointQuery = {
+                        oauth_token: twitterApiRequestTokenResponse.oauth_token,
+                    };
+                    const redirectUrl = addQueryToUrl(query)(twitterApiOAuthAuthenticateUrl);
+                    return either.right(redirectUrl);
+                } else {
+                    return either.left(
+                        ErrorResponse.Simple({
+                            statusCode: INTERNAL_SERVER_ERROR,
+                            message: `Expected 'oauth_callback_confirmed' to be 'true'`,
+                        }),
+                    );
+                }
+            },
+        )
         .chain(taskEither.fromEither)
         .fold(errorResponseToResult, TemporaryRedirect)
         .run(),
@@ -89,18 +89,21 @@ export const authCallback = wrapAsync(req => {
 });
 
 const homeUnauthenticated: SafeRequestHandler = () =>
-    Ok.apply(`Not authenticated. <a href="${Route.GetAuthIndex}">Log in</a>.`, htmlValueWriteable);
+    Ok.apply(
+        `Not authenticated. <a href="${RoutePathname.GetAuthIndex}">Log in</a>.`,
+        htmlValueWriteable,
+    );
 
 const homeAuthenticated: SafeRequestHandlerAsync = req => {
     const credentialsM = getTwitterUserCredentialsFromReq(req);
 
-    const userM = credentialsM.chain(credentials =>
+    const accountSettingsM = credentialsM.chain(credentials =>
         new TaskEither(fetchAccountSettings(credentials)).mapLeft(twitterApiErrorResponse =>
             ErrorResponse.TwitterApi({ errorResponse: twitterApiErrorResponse }),
         ),
     );
 
-    const timeZoneM = userM.map(getUserTimeZone).chain(taskEither.fromEither);
+    const timeZoneM = accountSettingsM.map(getUserTimeZone).chain(taskEither.fromEither);
 
     // prettier-ignore
     return apply.liftA2(taskEither.taskEither)(

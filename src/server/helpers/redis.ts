@@ -11,8 +11,8 @@ import Task = task.Task;
 import Either = either.Either;
 
 const promiseRedisClient = {
-    // We can't use the denodeify helper here, because we lose the binding to
-    // the redis object (and .bind loses the type!).
+    // We can't use the denodeify helper here, because we lose the binding to the redis object (and
+    // `.bind` loses the type: https://github.com/Microsoft/TypeScript/issues/212).
     get: (key: string): Promise<string> =>
         new Promise((resolve, reject) => {
             redisClient.get(key, (error, result) => {

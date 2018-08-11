@@ -14,5 +14,11 @@ export enum EnvVar {
 }
 
 const getEnvVar = (key: EnvVar) => process.env[key];
-const getEnvVarOption = pipe(getEnvVar, option.fromNullable);
-export const getEnvVarUnsafe = pipe(getEnvVarOption, unsafeGet);
+const getEnvVarOption = pipe(
+    getEnvVar,
+    option.fromNullable,
+);
+export const getEnvVarUnsafe = pipe(
+    getEnvVarOption,
+    unsafeGet,
+);

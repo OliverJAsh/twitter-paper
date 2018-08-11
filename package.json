@@ -1,44 +1,42 @@
 {
   "private": true,
   "scripts": {
-    "tsc:server": "tsc --project ./src/server/",
+    "tsc:server": "tsc --build ./src/server/",
     "tsc:server:watch": "npm run tsc:server -- --watch",
     "typecheck:server:watch": "npm run tsc:server:watch -- --noEmit",
     "pretsc": "rm -rf ./target-tsc/ && mkdir -p ./target-tsc/",
     "tsc": "npm run tsc:server",
-    "ts-unused-exports:server":
-      "ts-unused-exports './src/server/tsconfig.json'",
+    "ts-unused-exports:server": "ts-unused-exports './src/server/tsconfig.json'",
     "compile": "npm run tsc",
-    "server:dev":
-      "node --harmony-async-iteration --inspect=0.0.0.0:9229 ./server-entry.js",
-    "server": "node --harmony-async-iteration ./server-entry.js",
-    "start:dev":
-      "nodemon --exec 'concurrently --kill-others-on-fail \"npm run compile\" \"npm run lint\" && npm run server:dev' --watch ./src/server --ext ts",
-    "start":
-      "concurrently --kill-others-on-fail 'npm run compile' 'npm run lint' && npm run server",
-    "test:server":
-      " npm run tsc:server && npm run lint:server && node --harmony-async-iteration ./server-entry-tests.js",
+    "node:with-source-maps": "node --require source-map-support/register",
+    "server": "npm run node:with-source-maps -- ./target-tsc/server/index.js",
+    "server:dev": "npm run node:with-source-maps -- --inspect=0.0.0.0:9229 ./target-tsc/server/index.js",
+    "start:dev": "nodemon --exec 'concurrently --kill-others-on-fail \"npm run compile\" \"npm run lint\" && npm run server:dev' --watch ./src/server/ --ext ts",
+    "start": "concurrently --kill-others-on-fail 'npm run compile' 'npm run lint' && npm run server",
+    "test:server": "npm run tsc:server && npm run lint:server && npm run node:with-source-maps -- ./target-tsc/server/tests/index.test.js",
     "test": "npm run test:server",
-    "tslint:server": "tslint --project './src/server'",
+    "tslint:server": "tslint --project './src/server/'",
     "lint:server": "npm run tslint:server && npm run ts-unused-exports:server",
     "lint": "npm run lint:server",
-    "format": "prettier --write './src/**/*.{ts,js}' './**/*.json'"
+    "format": "prettier --write './**/*.{ts,js,json,md,yml}' '.prettierrc'"
   },
   "dependencies": {
-    "concurrently": "^3.5.0",
-    "ts-unused-exports": "^2.0.3",
-    "tslint": "^5.5.0",
-    "tslint-immutable": "^4.4.0",
+    "concurrently": "^3.6.1",
+    "ts-unused-exports": "^2.0.11",
+    "tslint": "^5.11.0",
+    "tslint-no-unused": "^0.2.0-alpha.1",
     "typescript": "^3.0.1"
   },
   "devDependencies": {
-    "nodemon": "^1.11.0",
-    "prettier": "^1.5.2",
-    "tslint-language-service": "^0.9.6"
+    "nodemon": "^1.18.3",
+    "prettier": "^1.14.2",
+    "tslint-language-service": "^0.9.9"
   },
-  "workspaces": ["src/server"],
+  "workspaces": [
+    "src/server"
+  ],
   "engines": {
-    "node": "8.9.4",
-    "yarn": "1.3.2"
+    "node": "10.8.0",
+    "yarn": "1.9.2"
   }
 }

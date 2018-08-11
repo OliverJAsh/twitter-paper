@@ -1,6 +1,4 @@
 import { SafeRequest } from 'express-fp';
-// Transitive dependency of express-fp
-// tslint:disable-next-line no-implicit-dependencies
 import { Status, Writeable } from 'express-result-types/target/result';
 import { liftA2 } from 'fp-ts/lib/Apply';
 import * as either from 'fp-ts/lib/Either';
@@ -33,7 +31,7 @@ import TaskEither = taskEither.TaskEither;
 import ErrorResponse = ErrorResponses.ErrorResponse;
 import { FetchFn } from './timeline-responses-iterable';
 
-export enum Route {
+export enum RoutePathname {
     GetAuthIndex = '/auth',
     GetAuthCallback = '/auth/callback',
     GetHome = '/',
@@ -42,7 +40,7 @@ export enum Route {
 const TWITTER_CONSUMER_SECRET = getEnvVarUnsafe(EnvVar.TWITTER_CONSUMER_SECRET);
 const TWITTER_CONSUMER_KEY = getEnvVarUnsafe(EnvVar.TWITTER_CONSUMER_KEY);
 
-const TWITTER_CALLBACK_URL = url.resolve(BASE_URL, Route.GetAuthCallback);
+const TWITTER_CALLBACK_URL = url.resolve(BASE_URL, RoutePathname.GetAuthCallback);
 
 export const createFetchHomeTimelineFn = (credentials: UserTwitterCredentialsT): FetchFn => (
     maybeMaxId: Option<string>,

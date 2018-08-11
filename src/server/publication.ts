@@ -1,4 +1,4 @@
-// Tweets in timeline response page must be ordered descendingly
+// Tweets in timeline response page must be in descending order
 
 import { array, last } from 'fp-ts/lib/Array';
 import * as chain from 'fp-ts/lib/Chain';
@@ -12,7 +12,7 @@ import { dropWhile, takeWhile, uniqBy } from 'ramda';
 import * as TwitterApiTypes from 'twitter-api-ts/target/types';
 import { ofType, unionize } from 'unionize';
 
-import { asyncIterabletoTaskArray, takeUntil } from './helpers/ix';
+import { asyncIterableToTaskArray, takeUntil } from './helpers/ix';
 import { getTweetCreatedAtParsed, getTweetId } from './helpers/twitter-api';
 import { TwitterTimelineResponsesIterable } from './timeline-responses-iterable';
 import { FullPublicationResponse, PublicationResponse, TaskEitherFromEither } from './types';
@@ -78,7 +78,10 @@ const getTweetsInRange = (publicationDate: luxon.DateTime) =>
 
 const isTweetInRange = (publicationDate: luxon.DateTime) => {
     const publicationRange = getPublicationRange(publicationDate);
-    return pipe(getTweetCreatedAtParsed, dateTime => publicationRange.contains(dateTime));
+    return pipe(
+        getTweetCreatedAtParsed,
+        dateTime => publicationRange.contains(dateTime),
+    );
 };
 
 export const PublicationWarning = unionize({
@@ -103,8 +106,8 @@ const getWarning = (publicationDate: luxon.DateTime) => (
     return isRangeStartPotentiallyUnreachable
         ? option.some(PublicationWarning.RangeStartPotentiallyUnreachable({}))
         : isRangeEndPotentiallyUnreachable
-          ? option.some(PublicationWarning.RangeEndPotentiallyUnreachable({}))
-          : option.none;
+            ? option.some(PublicationWarning.RangeEndPotentiallyUnreachable({}))
+            : option.none;
 };
 
 const checkIsPageAfterRangeEnd = (publicationDate: luxon.DateTime) => (
@@ -145,7 +148,7 @@ export const getLatestPublication = ({
     const responsesInRangeIterable = takeTimelineResponsesUntilRangeEnd(publicationDate)(
         responsesIterable,
     );
-    const responsesInRangeTask = asyncIterabletoTaskArray(responsesInRangeIterable);
+    const responsesInRangeTask = asyncIterableToTaskArray(responsesInRangeIterable);
     const pagesInRangeResponseTask = responsesInRangeTask.map(sequenceEithers);
     const publicationTweetsM = new TaskEither(pagesInRangeResponseTask).map(flattenArray);
 
@@ -157,9 +160,11 @@ export const getLatestPublication = ({
             // Since the max ID parameter is inclusive, there will be duplicates
             // where the pages meet. This removes them.
             .map(getUniqueTweetsById)
-            .map((tweets): PublicationResponse => ({
-                warning: getWarning(publicationDate)(tweets),
-                tweets: getTweetsInRange(publicationDate)(tweets),
-            }))
+            .map(
+                (tweets): PublicationResponse => ({
+                    warning: getWarning(publicationDate)(tweets),
+                    tweets: getTweetsInRange(publicationDate)(tweets),
+                }),
+            )
     );
 };
