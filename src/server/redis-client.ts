@@ -3,4 +3,7 @@ import * as redis from 'redis';
 
 import { EnvVar, getEnvVarUnsafe } from './helpers/env-vars';
 
-export const redisClient = pipe(() => getEnvVarUnsafe(EnvVar.REDIS_URL), redis.createClient)({});
+export const redisClient = pipe(
+    () => getEnvVarUnsafe(EnvVar.REDIS_URL),
+    redisUrl => redis.createClient(redisUrl),
+)({});

@@ -4,7 +4,11 @@ import * as luxon from 'luxon';
 import { map, mean, pipe } from 'ramda';
 import { createErrorResponse } from 'twitter-api-ts/target/helpers';
 import * as TwitterApiTypes from 'twitter-api-ts/target/types';
-import { ObjectDiff } from 'typelevel-ts/lib';
+
+type Omit < T , K extends keyof T > = Pick<T, Exclude<keyof T, K>>;
+type ObjectOmit < T extends K , K > = Omit<T, keyof K>;
+
+type ObjectDiff < O1 extends O2 , O2 > = ObjectOmit<O1, O2> & Partial<O2>;
 
 import { formatTwitterDate } from '../helpers/twitter-date';
 
