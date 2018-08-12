@@ -107,7 +107,7 @@ const homeAuthenticated: SafeRequestHandlerAsync = req => {
 
     // prettier-ignore
     return apply.liftA2(taskEither.taskEither)(
-        (credentials: UserTwitterCredentialsT) => (timeZone: string) => ({ credentials, timeZone })
+        (credentials: UserTwitterCredentialsT) => (timeZone: luxon.IANAZone) => ({ credentials, timeZone })
     )
         (credentialsM)
         (timeZoneM)

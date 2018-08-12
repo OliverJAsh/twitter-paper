@@ -4,7 +4,7 @@ import * as luxon from 'luxon';
 import { getPublicationDateForTimeZone } from '../publication';
 
 tape('`getPublicationDateForTimeZone` should select today', assert => {
-    const timeZone = 'Europe/London';
+    const timeZone = new luxon.IANAZone('Europe/London');
     const nowDate = luxon.DateTime.utc(2018, 1, 2, 12);
     const publicationDate = getPublicationDateForTimeZone(nowDate)(timeZone);
     const actualIso = publicationDate.toISO();
@@ -15,7 +15,7 @@ tape('`getPublicationDateForTimeZone` should select today', assert => {
 });
 
 tape('`getPublicationDateForTimeZone` should select yesterday', assert => {
-    const timeZone = 'Europe/London';
+    const timeZone = new luxon.IANAZone('Europe/London');
     const nowDate = luxon.DateTime.utc(2018, 1, 2);
     const publicationDate = getPublicationDateForTimeZone(nowDate)(timeZone);
     const actualIso = publicationDate.toISO();
@@ -26,7 +26,7 @@ tape('`getPublicationDateForTimeZone` should select yesterday', assert => {
 });
 
 tape('`getPublicationDateForTimeZone` should honour DST', assert => {
-    const timeZone = 'Europe/London';
+    const timeZone = new luxon.IANAZone('Europe/London');
     // Midday on the day of DST spring forward
     const nowDate = luxon.DateTime.utc(2018, 3, 25, 12);
     const publicationDate = getPublicationDateForTimeZone(nowDate)(timeZone);

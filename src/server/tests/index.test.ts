@@ -34,7 +34,7 @@ import './helpers/twitter-date.test';
 import './publication.test';
 // tslint:enable no-import-side-effect
 
-const timeZone = 'utc';
+const timeZone = new luxon.IANAZone('utc');
 const nowDate = luxon.DateTime.utc(2017, 1, 2);
 const publicationDate = getPublicationDateForTimeZone(nowDate)(timeZone);
 const previousPublicationDate = publicationDate.minus({ days: 1 });

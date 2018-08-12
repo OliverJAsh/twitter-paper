@@ -24,7 +24,9 @@ import TaskEither = taskEither.TaskEither;
 const PUBLICATION_HOUR = 6;
 
 // Given UTC date for now and time zone, returns UTC date for publication
-export const getPublicationDateForTimeZone = (nowDate: luxon.DateTime) => (timeZone: string) => {
+export const getPublicationDateForTimeZone = (nowDate: luxon.DateTime) => (
+    timeZone: luxon.IANAZone,
+) => {
     const localDate = nowDate.setZone(timeZone);
     const createLocalPublicationDateYesterday = () =>
         localDate

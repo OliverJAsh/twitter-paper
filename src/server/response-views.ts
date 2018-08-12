@@ -76,17 +76,17 @@ const getWarningMessage = PublicationWarning.match({
         `This publication is potentially incomplete. We were unable to find any tweets > the publication start time. Note we can only access up to the last ${TIMELINE_MAX} tweets.`,
 });
 
-const formatDateWithTimeZone = (timeZone: string) => (dateTime: luxon.DateTime): string =>
+const formatDateWithTimeZone = (timeZone: luxon.IANAZone) => (dateTime: luxon.DateTime): string =>
     dateTime.setZone(timeZone).toFormat('D TTT');
-const formatTweetCreatedAt = (timeZone: string) =>
+const formatTweetCreatedAt = (timeZone: luxon.IANAZone) =>
     pipe(
         parseTwitterDate,
         formatDateWithTimeZone(timeZone),
     );
 
-export const renderPublication = (publication: PublicationResponse) => (timeZone: string) => (
-    publicationDate: luxon.DateTime,
-): string =>
+export const renderPublication = (publication: PublicationResponse) => (
+    timeZone: luxon.IANAZone,
+) => (publicationDate: luxon.DateTime): string =>
     [
         ...publication.warning
             .map(getWarningMessage)

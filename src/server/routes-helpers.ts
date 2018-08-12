@@ -11,6 +11,7 @@ import {
     TOO_MANY_REQUESTS,
 } from 'http-status-codes';
 import * as t from 'io-ts';
+import * as luxon from 'luxon';
 import * as TwitterApi from 'twitter-api-ts';
 import * as TwitterApiTypes from 'twitter-api-ts/target/types';
 import * as url from 'url';
@@ -123,17 +124,20 @@ export const getTwitterUserCredentialsFromReq = (
 
 export const getUserTimeZone = (
     user: TwitterApiTypes.TwitterAPIAccountSettingsT,
-): OrErrorResponse<string> =>
-    option.fromNullable(user.time_zone.tzinfo_name).foldL(
-        (): OrErrorResponse<string> =>
-            either.left(
-                ErrorResponse.Simple({
-                    statusCode: INTERNAL_SERVER_ERROR,
-                    message: 'Time zone not available for Twitter user',
-                }),
-            ),
-        timeZone => either.right(timeZone),
-    );
+): OrErrorResponse<luxon.IANAZone> =>
+    option
+        .fromNullable(user.time_zone.tzinfo_name)
+        .foldL(
+            (): OrErrorResponse<string> =>
+                either.left(
+                    ErrorResponse.Simple({
+                        statusCode: INTERNAL_SERVER_ERROR,
+                        message: 'Time zone not available for Twitter user',
+                    }),
+                ),
+            timeZone => either.right(timeZone),
+        )
+        .map(s => new luxon.IANAZone(s));
 
 enum AuthCallbackQueryParameter {
     OAuthToken = 'oauth_token',
