@@ -6,10 +6,10 @@ import * as taskEither from 'fp-ts/lib/TaskEither';
 import { INTERNAL_SERVER_ERROR } from 'http-status-codes';
 import * as luxon from 'luxon';
 import * as TwitterApiTypes from 'twitter-api-ts/target/types';
+import { addQueryToUrl } from 'url-transformers';
 
 import { setUserTwitterCredentials } from './helpers/redis';
 import { twitterApiOAuthAuthenticateUrl } from './helpers/twitter-api';
-import { addQueryToUrl } from './helpers/url';
 import { getLatestPublication, getPublicationDateForTimeZone } from './publication';
 import { renderPublication } from './response-views';
 import {
@@ -42,7 +42,9 @@ export const authIndex = wrapAsync(() =>
                     const query: TwitterApiTypes.OAuthAuthenticateEndpointQuery = {
                         oauth_token: twitterApiRequestTokenResponse.oauth_token,
                     };
-                    const redirectUrl = addQueryToUrl(query)(twitterApiOAuthAuthenticateUrl);
+                    const redirectUrl = addQueryToUrl({ url: twitterApiOAuthAuthenticateUrl })({
+                        queryToAppend: query,
+                    });
                     return either.right(redirectUrl);
                 } else {
                     return either.left(

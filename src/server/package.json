@@ -35,7 +35,8 @@
     "redis": "^2.7.1",
     "source-map-support": "^0.5.8",
     "twitter-api-ts": "^0.0.33",
-    "unionize": "^2.1.2"
+    "unionize": "^2.1.2",
+    "url-transformers": "^0.0.1"
   },
   "devDependencies": {
     "blue-tape": "^1.0.0"
