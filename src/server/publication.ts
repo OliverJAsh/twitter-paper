@@ -26,12 +26,13 @@ const PUBLICATION_HOUR = 6;
 // Given UTC date for now and time zone, returns UTC date for publication
 export const getPublicationDateForTimeZone = (nowDate: luxon.DateTime) => (timeZone: string) => {
     const localDate = nowDate.setZone(timeZone);
-    const localPublicationDateYesterday = localDate
-        .set({
-            day: localDate.day - 1,
-            hour: PUBLICATION_HOUR,
-        })
-        .startOf('hour');
+    const createLocalPublicationDateYesterday = () =>
+        localDate
+            .set({
+                day: localDate.day - 1,
+                hour: PUBLICATION_HOUR,
+            })
+            .startOf('hour');
     const localPublicationDateToday = localDate
         .set({
             hour: PUBLICATION_HOUR,
@@ -40,7 +41,7 @@ export const getPublicationDateForTimeZone = (nowDate: luxon.DateTime) => (timeZ
     const localPublicationDate =
         nowDate >= localPublicationDateToday
             ? localPublicationDateToday
-            : localPublicationDateYesterday;
+            : createLocalPublicationDateYesterday();
     return localPublicationDate.setZone('utc');
 };
 
