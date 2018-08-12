@@ -24,6 +24,7 @@
     "express-result-types": "^0.0.4",
     "express-session": "^1.15.2",
     "fp-ts": "^1.7.1",
+    "full-icu": "^1.2.1",
     "http-status-codes": "^1.3.0",
     "io-ts": "^1.3.0",
     "io-ts-reporters": "^0.0.21",
