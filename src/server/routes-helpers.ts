@@ -24,13 +24,13 @@ import {
     MAX_TIMELINE_COUNT,
 } from './helpers/twitter-api';
 import { renderErrorResponse } from './response-views';
+import { FetchFn } from './timeline-responses-iterable';
 import { OrErrorResponse, OrErrorResponseAsync, UserTwitterCredentialsT } from './types';
 import * as ErrorResponses from './types/error-response';
 
 import Option = option.Option;
 import TaskEither = taskEither.TaskEither;
 import ErrorResponse = ErrorResponses.ErrorResponse;
-import { FetchFn } from './timeline-responses-iterable';
 
 export enum RoutePathname {
     GetAuthIndex = '/auth',
