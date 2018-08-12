@@ -12,6 +12,7 @@ import * as routes from './routes';
 import { RoutePathname } from './routes-helpers';
 
 luxon.Settings.throwOnInvalid = true;
+luxon.Settings.defaultLocale = 'en-GB';
 
 const app = express();
 
