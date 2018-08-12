@@ -10,7 +10,7 @@ import * as TwitterApiTypes from 'twitter-api-ts/target/types';
 import { setUserTwitterCredentials } from './helpers/redis';
 import { twitterApiOAuthAuthenticateUrl } from './helpers/twitter-api';
 import { addQueryToUrl } from './helpers/url';
-import { getLatestPublication } from './publication';
+import { getLatestPublication, getPublicationDateForTimeZone } from './publication';
 import { renderPublication } from './response-views';
 import {
     createFetchHomeTimelineFn,
@@ -115,11 +115,12 @@ const homeAuthenticated: SafeRequestHandlerAsync = req => {
             const fetchFn = createFetchHomeTimelineFn(credentials);
             const responsesIterable = createTimelineResponsesIterable(fetchFn);
             const nowDate = luxon.DateTime.utc();
-            return getLatestPublication({ responsesIterable, nowDate, timeZone });
+            const publicationDate = getPublicationDateForTimeZone(nowDate)(timeZone);
+            return getLatestPublication({ responsesIterable, publicationDate }).map(publication => ({ timeZone, publication, publicationDate }))
         })
-        .fold(errorResponseToResult, publication => {
+        .fold(errorResponseToResult, ({ timeZone, publication, publicationDate }) => {
             console.log(publication.warning);
-            return Ok.apply(renderPublication(publication), htmlValueWriteable);
+            return Ok.apply(renderPublication(publication)(timeZone)(publicationDate), htmlValueWriteable);
         })
         .run();
 };

@@ -1,8 +1,11 @@
 import { JsonDecodeError } from 'decode-ts/target/types';
 import * as array from 'fp-ts/lib/Array';
+import { pipe } from 'fp-ts/lib/function';
 import { formatValidationError } from 'io-ts-reporters';
+import * as luxon from 'luxon';
 import { ErrorResponse as TwitterApiErrorResponse } from 'twitter-api-ts/target/types';
 
+import { parseTwitterDate } from './helpers/twitter-date';
 import { PublicationWarning } from './publication';
 import { PublicationResponse } from './types';
 import { ErrorResponse } from './types/error-response';
@@ -73,18 +76,29 @@ const getWarningMessage = PublicationWarning.match({
         `This publication is potentially incomplete. We were unable to find any tweets > the publication start time. Note we can only access up to the last ${TIMELINE_MAX} tweets.`,
 });
 
-export const renderPublication = (publication: PublicationResponse): string =>
+const formatDateWithTimeZone = (timeZone: string) => (dateTime: luxon.DateTime): string =>
+    dateTime.setZone(timeZone).toFormat('D TTT');
+const formatTweetCreatedAt = (timeZone: string) =>
+    pipe(
+        parseTwitterDate,
+        formatDateWithTimeZone(timeZone),
+    );
+
+export const renderPublication = (publication: PublicationResponse) => (timeZone: string) => (
+    publicationDate: luxon.DateTime,
+): string =>
     [
         ...publication.warning
             .map(getWarningMessage)
             .map(message => [`Warning: ${message}`])
             .getOrElse([]),
+        `<p>Publication date: ${formatDateWithTimeZone(timeZone)(publicationDate)}</p>`,
         `<ol>${publication.tweets
             .map(
                 tweet =>
-                    `<li>${tweet.id_str} ${tweet.created_at} @${tweet.user.screen_name}: ${
-                        tweet.text
-                    }</li>`,
+                    `<li>${tweet.id_str} ${formatTweetCreatedAt(timeZone)(tweet.created_at)} @${
+                        tweet.user.screen_name
+                    }: ${tweet.text}</li>`,
             )
             .join('')}</ol>`,
     ].join('');

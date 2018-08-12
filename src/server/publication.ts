@@ -137,15 +137,11 @@ const sequenceEithers = traversable.sequence(either, array);
 
 export const getLatestPublication = ({
     responsesIterable,
-    nowDate,
-    timeZone,
+    publicationDate,
 }: {
     responsesIterable: TwitterTimelineResponsesIterable;
-    nowDate: luxon.DateTime;
-    timeZone: string;
+    publicationDate: luxon.DateTime;
 }): TaskEitherFromEither<FullPublicationResponse> => {
-    const publicationDate = getPublicationDateForTimeZone(nowDate)(timeZone);
-
     const responsesInRangeIterable = takeTimelineResponsesUntilRangeEnd(publicationDate)(
         responsesIterable,
     );

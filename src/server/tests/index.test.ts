@@ -77,8 +77,7 @@ tape(
         const responsesIterable = createPagesGenerator();
         const serverResponse = await getLatestPublication({
             responsesIterable,
-            nowDate,
-            timeZone,
+            publicationDate,
         }).value.run();
 
         assertEitherRight(assert, serverResponse, ({ tweets }) => {
@@ -112,8 +111,7 @@ tape('`getLatestPublication` given failures, should return first failure', async
     const responsesIterable = createPagesGenerator();
     const serverResponse = await getLatestPublication({
         responsesIterable,
-        nowDate,
-        timeZone,
+        publicationDate,
     }).value.run();
 
     assertEitherLeft(
@@ -162,8 +160,7 @@ tape(
         const responsesIterable = createPagesGenerator();
         const serverResponse = await getLatestPublication({
             responsesIterable,
-            nowDate,
-            timeZone,
+            publicationDate,
         }).value.run();
 
         assertEitherRight(assert, serverResponse, ({ tweets }) => {
@@ -202,8 +199,7 @@ tape(
         const responsesIterable = createPagesGenerator();
         const serverResponse = await getLatestPublication({
             responsesIterable,
-            nowDate,
-            timeZone,
+            publicationDate,
         }).value.run();
 
         assertEitherRight(assert, serverResponse, () => {
@@ -224,8 +220,7 @@ tape('`getLatestPublication` should finish iterating pages when a page is empty'
     const responsesIterable = createPagesGenerator();
     const serverResponse = await getLatestPublication({
         responsesIterable,
-        nowDate,
-        timeZone,
+        publicationDate,
     }).value.run();
 
     assertEitherRight(assert, serverResponse, () => {
@@ -245,8 +240,7 @@ tape('`getLatestPublication` warning: last is before: none', async assert => {
     const responsesIterable = createPagesGenerator();
     const serverResponse = await getLatestPublication({
         responsesIterable,
-        nowDate,
-        timeZone,
+        publicationDate,
     }).value.run();
 
     assertEitherRight(assert, serverResponse, ({ warning }) => {
@@ -268,8 +262,7 @@ tape(
         const responsesIterable = createPagesGenerator();
         const serverResponse = await getLatestPublication({
             responsesIterable,
-            nowDate,
-            timeZone,
+            publicationDate,
         }).value.run();
 
         assertEitherRight(assert, serverResponse, ({ warning }) => {
@@ -289,8 +282,7 @@ tape('`getLatestPublication` warning: no last: none', async assert => {
     const responsesIterable = createPagesGenerator();
     const serverResponse = await getLatestPublication({
         responsesIterable,
-        nowDate,
-        timeZone,
+        publicationDate,
     }).value.run();
 
     assertEitherRight(assert, serverResponse, ({ warning }) => {
@@ -315,8 +307,7 @@ tape(
         const responsesIterable = createPagesGenerator();
         const serverResponse = await getLatestPublication({
             responsesIterable,
-            nowDate,
-            timeZone,
+            publicationDate,
         }).value.run();
 
         assertEitherRight(assert, serverResponse, ({ warning }) => {
